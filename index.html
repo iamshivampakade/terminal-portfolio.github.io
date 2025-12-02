@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shivam Pakade - Portfolio Terminal</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load React and ReactDOM Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Load Babel for JSX compilation (Crucial for running single-file React directly) -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Custom style for scrollbar -->
+    <style>
+        /* Define the custom font family based on your component's CSS */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+        
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background-color: #4b5563; /* Gray-700 equivalent */
+            border-radius: 20px;
+        }
+
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #000000;
+        }
+
+        body {
+            /* Set a default background color matching the container background */
+            background-color: #111827; /* Tailwind gray-900 */
+        }
+    </style>
+</head>
+<body>
+    <!-- This is where the React app will be mounted -->
+    <div id="root"></div>
+
+    <!-- The actual React component code is now embedded here. -->
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+        // Mock Lucide icons for standalone Babel/React setup
+        // In a real project with npm, you would import these normally.
+        const Mail = ({ className, style }) => <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>;
+        const Github = ({ className, style }) => <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 3c0 0-1.01-.36-3.32 1.34A12.35 12.35 0 0012 3c-2.35 0-4.01.78-4.32 1.34A5.44 5.44 0 004 4.77a5.44 5.44 0 00-.94 2.61c0 5.07 3.3 6.9 6.44 7A3.37 3.37 0 0010 18.13V22"></path></svg>;
+        const User = ({ className, style }) => <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>;
+        const Zap = ({ className, style }) => <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>;
+        const BookOpen = ({ className, style }) => <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"></path><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"></path></svg>;
+        const TerminalIcon = ({ className, style }) => <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>;
+        const Award = ({ className, style }) => <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="15 15 11 19 15 19"></polyline><polyline points="9 15 13 19 9 19"></polyline></svg>;
+        const Briefcase = ({ className, style }) => <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"></path></svg>;
+
+        // --- CONFIGURATION ---
+        const NAME = "SHIVAM PAKADE";
+        const ROLE = "Jr Cybersecurity Analyst";
+        const LOCATION = "Morshi, India";
+        const EMAIL = "shivampakade@gmail.com";
+        const PHONE = "+91 8275299833";
+        const GITHUB_URL = "https://github.com/shivam-pakade"; // Placeholder: Please update with actual URL
+        const LINKEDIN_URL = "https://linkedin.com/in/shivam-pakade"; // Placeholder: Please update with actual URL
+        const RESUME_DOWNLOAD_URL = "uploaded:Shivam Pakade [Jr Cybersecurity Analyst].pdf"; // Path to the uploaded PDF
+
+        // NEW NEON COLORS FOR RADIUM GLOW EFFECT
+        const NEON_GREEN = '#00FF41'; // Bright, acidic green
+        const NEON_CYAN = '#00FFFF'; // Vibrant Aqua/Cyan
+        const NEON_YELLOW = '#FFFF00'; // Fluorescent Yellow
+        const NEON_RED = '#FF3366'; // Hot Pink/Red for accents/errors
+        // const NEON_BLUE = '#3366FF'; // Not used for normal text
+
+        const COMMANDS = {
+          help: 'Shows available commands.',
+          about: 'Learn about Shivam Pakade, Jr Cybersecurity Analyst.',
+          skills: 'View core technical skills.',
+          experience: 'View professional experience.',
+          projects: 'View security projects and CTF achievements.',
+          resume: 'Provides a direct link to download the PDF resume.',
+          contact: 'Get contact information (Email, GitHub, LinkedIn).',
+          clear: 'Clears the terminal screen.',
+          history: 'Shows command history.',
+        };
+
+        // --- REVERTED NORMAL TEXT LOGIC ---
+
+        // Revert to normal display using NEON_GREEN color
+        const NORMAL_NAME = `
+            <span class="font-bold block leading-tight text-3xl sm:text-4xl" 
+                  style="color: ${NEON_GREEN}; text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);"
+            >
+                ${NAME}
+            </span>
+        `;
+        // --- END REVERTED NORMAL TEXT LOGIC ---
+
+        // --- UPDATED BRANDING: Removed "Security" ---
+        const INITIAL_PROMPT = `
+          <div style="color: ${NEON_GREEN};">
+            ${NORMAL_NAME}
+            <br/>
+            Welcome to ${NAME}'s Portfolio Terminal!
+            <br/><br/>
+            Type 'help' to see all available commands.
+          </div>
+        `;
+
+        const PROMPT_PREFIX = 'shivam@portfolio-terminal'; // Changed from security-terminal
+        const FONT_FAMILY = 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace';
+
+        // --- COMMAND HANDLERS ---
+        const handleCommand = (command) => {
+          const parts = command.trim().toLowerCase().split(' ');
+          const cmd = parts[0];
+          // const args = parts.slice(1);
+
+          switch (cmd) {
+            case 'help':
+              return (
+                <div className="py-1">
+                  <p className="font-bold mb-2" style={{ color: NEON_YELLOW }}>Available Commands:</p>
+                  {Object.entries(COMMANDS).map(([key, description]) => (
+                    <p key={key} className="flex">
+                      <span className="w-24 md:w-32" style={{ color: NEON_GREEN }}>{key}</span>
+                      <span className="text-gray-300">- {description}</span>
+                    </p>
+                  ))}
+                </div>
+              );
+
+            case 'about':
+              return (
+                <div className="space-y-3 py-1">
+                  <p className="flex items-center font-bold" style={{ color: NEON_CYAN }}>
+                    <User className="w-5 h-5 mr-3" style={{ color: NEON_CYAN }} /> {NAME}
+                  </p>
+                  <p className="text-gray-300 ml-8">
+                    <span className="font-semibold" style={{ color: NEON_GREEN }}>Role:</span> {ROLE}
+                  </p>
+                  <p className="text-gray-300 ml-8">
+                    <span className="font-semibold" style={{ color: NEON_GREEN }}>Location:</span> {LOCATION}
+                  </p>
+                  <p className="text-gray-300 ml-8">
+                    <span className="font-semibold" style={{ color: NEON_GREEN }}>Summary:</span> Detail-oriented and security-conscious professional with a solid foundation in networking, Linux, DevOps, and cybersecurity principles. Proficient in vulnerability assessment, threat detection, and log monitoring using SIEM tools. Experienced in handling network configurations, system hardening, and cloud security practices.
+                  </p>
+                </div>
+              );
+
+            case 'skills':
+              const coreSkills = [
+                "Network Security", "Linux Administration", "Incident Response",
+                "Vulnerability Assessment", "SIEM Monitoring", "DevSecOps", 
+                "Cloud Security (AWS)", "Scripting (Python, Bash)", "Threat Analysis",
+                "System Hardening"
+              ];
+              return (
+                <div className="space-y-2 py-1">
+                  <p className="font-bold" style={{ color: NEON_YELLOW }}>Core Technical Skills:</p>
+                  <ul className="list-none ml-4 text-gray-300 grid grid-cols-1 sm:grid-cols-2 gap-y-1">
+                    {coreSkills.map(skill => (
+                      <li key={skill} className="flex items-center">
+                        <Zap className="inline w-4 h-4 mr-2" style={{ color: NEON_RED }} flex-shrink-0="true" /> {skill}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              );
+
+            case 'experience':
+              return (
+                <div className="space-y-4 py-1">
+                  <p className="font-bold flex items-center" style={{ color: NEON_YELLOW }}><Briefcase className="w-5 h-5 mr-2"/>Professional Experience:</p>
+                  
+                  <div className="ml-4 border-l pl-4 border-gray-700">
+                    <p className="font-semibold" style={{ color: NEON_GREEN }}>Network & System Support Trainee, CFSS</p>
+                    <p className="text-gray-400 italic">Oct 2025 - Present</p>
+                    <ul className="list-disc list-outside text-gray-300 ml-4 mt-1 space-y-1 text-sm">
+                      <li>Assisted in configuring routers, switches, and virtual machines for lab environments.</li>
+                      <li>Supported troubleshooting and performance optimization for Linux servers.</li>
+                      <li>Worked on implementing basic security policies and SSH-based authentication.</li>
+                    </ul>
+                  </div>
+
+                  <div className="ml-4 border-l pl-4 border-gray-700">
+                    <p className="font-semibold" style={{ color: NEON_GREEN }}>Cybersecurity Intern, Internship Studio</p>
+                    <p className="text-gray-400 italic">Aug 2025 - Oct 2025</p>
+                    <ul className="list-disc list-outside text-gray-300 ml-4 mt-1 space-y-1 text-sm">
+                      <li>Assisted in monitoring and analyzing network traffic for security anomalies.</li>
+                      <li>Participated in incident triage and vulnerability scanning using open-source tools.</li>
+                      <li>Supported the configuration of firewalls and SIEM dashboards for event correlation.</li>
+                    </ul>
+                  </div>
+                </div>
+              );
+              
+            case 'projects':
+              return (
+                <div className="space-y-4 py-1">
+                  <p className="font-bold flex items-center" style={{ color: NEON_YELLOW }}><BookOpen className="w-5 h-5 mr-2"/>Projects & CTF Achievements:</p>
+
+                  <div className="ml-4">
+                    <p className="font-semibold" style={{ color: NEON_GREEN }}>Retail Card Transaction Tracker (Security Automation)</p>
+                    <ul className="list-disc list-outside text-gray-300 ml-4 mt-1 space-y-1 text-sm">
+                      <li>Developed a secure transaction tracking system using Python and MySQL.</li>
+                      <li>Integrated log analysis to detect suspicious transactions and data anomalies.</li>
+                      <li>Implemented user authentication and audit trails for compliance tracking.</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="ml-4">
+                    <p className="font-semibold" style={{ color: NEON_GREEN }}>DevSecOps CI/CD Pipeline Implementation</p>
+                    <ul className="list-disc list-outside text-gray-300 ml-4 mt-1 space-y-1 text-sm">
+                      <li>Designed and deployed a Jenkins-based CI/CD pipeline with integrated security checks.</li>
+                      <li>Used Docker and Kubernetes for secure containerized deployments.</li>
+                      <li>Integrated OWASP Dependency Check and SonarQube for vulnerability scanning.</li>
+                    </ul>
+                  </div>
+
+                  <p className="font-bold flex items-center mt-6" style={{ color: NEON_YELLOW }}><Award className="w-5 h-5 mr-2"/>CTF Highlights:</p>
+                  <ul className="list-none ml-4 text-gray-300 space-y-1 text-sm">
+                    <li><span className="font-semibold" style={{ color: NEON_CYAN }}>Kioptrix Level 1-3:</span> Completed post-exploitation, privilege escalation, and persistence setup.</li>
+                    <li><span className="font-semibold" style={{ color: NEON_CYAN }}>Lupin CTF Level 1 & 2:</span> Exploited misconfigurations and advanced privilege escalation through web app vulnerabilities.</li>
+                    <li><span className="font-semibold" style={{ color: NEON_CYAN }}>Jack of All Trades CTF:</span> Demonstrated penetration testing and OSINT analysis skills.</li>
+                  </ul>
+                </div>
+              );
+              
+            case 'resume':
+              return (
+                <div className="space-y-2 py-1">
+                  <p className="font-bold" style={{ color: NEON_YELLOW }}>Download Resume (PDF):</p>
+                  <p className="flex items-center text-gray-300 ml-4">
+                    <BookOpen className="w-4 h-4 mr-2" style={{ color: NEON_RED }} />
+                    <a 
+                      href={RESUME_DOWNLOAD_URL} 
+                      download 
+                      className="hover:underline"
+                      style={{ color: NEON_CYAN }}
+                    >
+                      Shivam Pakade - Jr Cybersecurity Analyst.pdf
+                    </a>
+                  </p>
+                  <p className="text-gray-400 ml-8 italic text-sm">
+                    Click the link above to start the download.
+                  </p>
+                </div>
+              );
+
+            case 'contact':
+              return (
+                <div className="space-y-2 py-1">
+                  <p className="font-bold" style={{ color: NEON_YELLOW }}>Contact Details:</p>
+                  <p className="flex items-center text-gray-300">
+                    <Mail className="w-4 h-4 mr-2" style={{ color: NEON_RED }} /> 
+                    Email: <a href={`mailto:${EMAIL}`} className="ml-2 hover:underline" style={{ color: NEON_CYAN }}>{EMAIL}</a>
+                  </p>
+                  <p className="flex items-center text-gray-300">
+                    <Github className="w-4 h-4 mr-2" style={{ color: NEON_RED }} />
+                    GitHub: <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="ml-2 hover:underline" style={{ color: NEON_CYAN }}>{GITHUB_URL.replace('https://', '')}</a>
+                  </p>
+                  <p className="flex items-center text-gray-300">
+                    <svg className="w-4 h-4 mr-2" style={{ color: NEON_RED }} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M21.5 0H2.5A2.5 2.5 0 000 2.5v19A2.5 2.5 0 002.5 24h19a2.5 2.5 0 002.5-2.5v-19A2.5 2.5 0 0021.5 0zM7 20h-3V9h3v11zM5.5 8.25a2.75 2.75 0 110-5.5 2.75 2.75 0 010 5.5zM20 20h-3v-5.45c0-1.2-0.03-2.73-1.66-2.73-1.66 0-1.92 1.29-1.92 2.65V20h-3V9h3v1.35h0.04c0.23-0.45 0.77-1.1 1.62-1.1 1.74 0 2.91 1.14 2.91 3.51V20z"/></svg>
+                    LinkedIn: <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" className="ml-2 hover:underline" style={{ color: NEON_CYAN }}>{LINKEDIN_URL.replace('https://', '')}</a>
+                  </p>
+                  <p className="text-gray-400 ml-8">Phone: {PHONE}</p>
+                </div>
+              );
+
+            default:
+              return (
+                <div className="py-1">
+                  <p style={{ color: NEON_RED }}>
+                    Command not found: <span style={{ color: NEON_YELLOW }}>'{cmd}'</span>
+                  </p>
+                  <p className="text-gray-400">
+                    Type 'help' to see available commands.
+                  </p>
+                </div>
+              );
+          }
+        };
+
+        // --- TERMINAL COMPONENTS ---
+
+        // Component to render the output of a single command
+        const CommandOutput = ({ entry }) => (
+          <div className="mb-2">
+            {/* Display the command that was run */}
+            <p className="break-words" style={{ color: NEON_GREEN }}>
+              <span style={{ color: NEON_YELLOW }}>{PROMPT_PREFIX}:~$ </span>
+              <span style={{ color: NEON_GREEN, fontWeight: 'bold' }}>{entry.command}</span>
+            </p>
+            {/* Display the output content */}
+            <div className="pl-4 leading-relaxed">
+              {entry.output}
+            </div>
+          </div>
+        );
+
+        // Component for the user input line
+        const TerminalInput = ({ command, setCommand, handleKeyPress, inputRef }) => (
+          <div className="flex items-center mt-2">
+            <label htmlFor="terminal-input" className="flex-shrink-0 mr-1 select-none" style={{ color: NEON_YELLOW }}>
+              {PROMPT_PREFIX}:~$
+            </label>
+            <input
+              id="terminal-input"
+              ref={inputRef}
+              type="text"
+              value={command}
+              onChange={(e) => setCommand(e.target.value)}
+              onKeyDown={handleKeyPress}
+              autoFocus
+              autoComplete="off"
+              spellCheck="false"
+              // Updated style for user input text: NEON_GREEN and BOLD
+              className="flex-grow bg-transparent outline-none caret-white px-1 font-bold"
+              style={{ color: NEON_GREEN }}
+            />
+            <div className="w-3 h-6 bg-white animate-pulse" /> {/* Larger Cursor */}
+          </div>
+        );
+
+        // Main Application Component
+        const App = () => {
+          const [commandHistory, setCommandHistory] = useState([
+            { command: '', output: <div dangerouslySetInnerHTML={{ __html: INITIAL_PROMPT }} /> },
+          ]);
+          const [currentCommand, setCurrentCommand] = useState('');
+          const [historyIndex, setHistoryIndex] = useState(-1);
+          const terminalEndRef = useRef(null);
+          const inputRef = useRef(null);
+
+          // Scroll to the bottom whenever history updates
+          const scrollToBottom = () => {
+            terminalEndRef.current?.scrollIntoView({ behavior: "smooth" });
+          };
+
+          useEffect(() => {
+            scrollToBottom();
+          }, [commandHistory]);
+
+          // Handle command submission (Enter key)
+          const handleSubmit = () => {
+            const trimmedCommand = currentCommand.trim();
+
+            if (!trimmedCommand) {
+              // Just add a new prompt line if input is empty
+              setCommandHistory(prev => [...prev, { command: '', output: <div /> }]);
+              setCurrentCommand('');
+              setHistoryIndex(-1);
+              return;
+            }
+
+            // Special case for 'clear' and 'history'
+            let output;
+            if (trimmedCommand.toLowerCase() === 'clear') {
+              setCommandHistory([]);
+              setCurrentCommand('');
+              setHistoryIndex(-1);
+              return; // Skip adding the entry
+            } else if (trimmedCommand.toLowerCase() === 'history') {
+              output = (
+                <div className="py-1">
+                  <p className="font-bold mb-2" style={{ color: NEON_YELLOW }}>Command History:</p>
+                  {commandHistory
+                    .filter(entry => entry.command) // Filter out the initial welcome message
+                    .map((entry, index) => (
+                      <p key={index} className="text-gray-300">
+                        {index + 1} &nbsp; {entry.command}
+                      </p>
+                    ))}
+                </div>
+              );
+            } else {
+              // Handle all other commands
+              output = handleCommand(trimmedCommand);
+            }
+
+            // Add the new entry to history
+            setCommandHistory(prev => [...prev, { command: trimmedCommand, output }]);
+            setCurrentCommand('');
+            setHistoryIndex(-1); // Reset history index
+          };
+
+          // Handle key presses (Enter, Up/Down arrows for history)
+          const handleKeyPress = (e) => {
+            if (e.key === 'Enter') {
+              handleSubmit();
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault();
+              // Move back in history
+              const newIndex = Math.min(historyIndex + 1, commandHistory.length - 1);
+              setHistoryIndex(newIndex);
+              if (newIndex >= 0) {
+                setCurrentCommand(commandHistory[commandHistory.length - 1 - newIndex].command);
+              }
+            } else if (e.key === 'ArrowDown') {
+              e.preventDefault();
+              // Move forward in history
+              const newIndex = historyIndex > 0 ? historyIndex - 1 : -1;
+              setHistoryIndex(newIndex);
+              if (newIndex > 0) {
+                setCurrentCommand(commandHistory[commandHistory.length - 1 - newIndex].command);
+              } else if (newIndex === 0) {
+                setCurrentCommand(commandHistory[commandHistory.length - 1].command);
+              } else {
+                setCurrentCommand('');
+              }
+            }
+          };
+
+          // Focus the input field when the terminal is clicked
+          const handleTerminalClick = () => {
+            inputRef.current?.focus();
+          };
+
+          // Custom style for Red/Magenta neon shadow (remains the same hot edge)
+          const terminalShadowStyle = {
+            boxShadow: '0 0 10px rgba(255, 0, 100, 0.9), 0 0 25px rgba(255, 50, 150, 0.7), 0 0 40px rgba(255, 0, 255, 0.5)',
+            border: '1px solid #FF3366', // Bright reddish-pink border for a crisp edge
+          };
+
+          return (
+            <div className="min-h-screen bg-gray-900 text-white p-4 sm:p-8 flex justify-center items-start pt-10" style={{ fontFamily: FONT_FAMILY }}>
+              <div 
+                className="w-full max-w-4xl h-[85vh] bg-black rounded-lg flex flex-col overflow-hidden transition-all duration-300"
+                style={terminalShadowStyle} // Apply the custom reddish neon shadow style here
+                onClick={handleTerminalClick}
+              >
+                {/* Terminal Header/Title Bar */}
+                <div className="flex items-center justify-between p-3 bg-gray-900 border-b border-red-700 rounded-t-lg select-none">
+                  <div className="flex space-x-2">
+                    <div className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 transition" />
+                    <div className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-400 transition" />
+                    <div className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-400 transition" />
+                  </div>
+                  <p className="text-sm font-semibold text-gray-300 flex items-center">
+                    <TerminalIcon className="w-4 h-4 mr-1"/>
+                    {PROMPT_PREFIX} — Portfolio Terminal
+                  </p>
+                  <div className="w-10"></div> {/* Spacer for symmetry */}
+                </div>
+
+                {/* Terminal Content Area */}
+                {/* Increased font size to md:text-lg and xl:text-xl for better visibility */}
+                <div className="flex-grow p-4 overflow-y-auto text-lg md:text-xl xl:text-2xl scrollbar-thin scrollbar-thumb-red-900 scrollbar-track-black">
+                  {/* Render command history */}
+                  {commandHistory.map((entry, index) => (
+                    <React.Fragment key={index}>
+                      {/* Display history command only if it's not the first (initial prompt) entry */}
+                      {index !== 0 && <CommandOutput entry={entry} />}
+                      {/* Display the initial welcome prompt */}
+                      {index === 0 && entry.output}
+                    </React.Fragment>
+                  ))}
+                  
+                  {/* Current Input */}
+                  <TerminalInput 
+                    command={currentCommand} 
+                    setCommand={setCurrentCommand} 
+                    handleKeyPress={handleKeyPress}
+                    inputRef={inputRef}
+                  />
+
+                  <div ref={terminalEndRef} />
+                </div>
+              </div>
+            </div>
+          );
+        };
+
+        // Mount the application
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
